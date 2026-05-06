@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>技术详情 - Jarvis</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  :root {
+    --primary: #0066FF;
+    --primary-light: #3388FF;
+    --bg-dark: #0A0F1E;
+    --bg-card: #111827;
+    --bg-card2: #0D1424;
+    --text-main: #FFFFFF;
+    --text-sub: #94A3B8;
+    --accent: #00D4AA;
+    --border: rgba(255,255,255,0.1);
+    --warning: #F59E0B;
+  }
+  
+  html { scroll-behavior: smooth; }
+  
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg-dark);
+    color: var(--text-main);
+    line-height: 1.6;
+  }
+  
+  /* 导航 */
+  .nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 16px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(10, 15, 30, 0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  
+  .logo { font-size: 20px; font-weight: 700; }
+  .logo span { color: var(--primary-light); }
+  .logo a { color: inherit; text-decoration: none; }
+  
+  .back-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-sub);
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s;
+  }
+  .back-link:hover { color: var(--text-main); }
+  .back-link::before { content: '←'; }
+
+  .container { max-width: 1000px; margin: 0 auto; padding: 0 48px; }
+  
+  section { padding: 80px 0; }
+  
+  .section-label {
+    font-size: 12px;
+    color: var(--primary-light);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  
+  .section-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    line-height: 1.2;
+  }
+  
+  .section-desc {
+    font-size: 16px;
+    color: var(--text-sub);
+    max-width: 600px;
+    margin-bottom: 40px;
+  }
+  
+  /* 代码块 */
+  .code-block {
+    background: #0D1424;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    font-family: "SF Mono", "Fira Code", Consolas, monospace;
+    font-size: 13px;
+    line-height: 1.8;
+    overflow-x: auto;
+    white-space: pre;
+    color: #E2E8F0;
+    margin: 24px 0;
+  }
+  
+  .code-block .comment { color: #64748B; }
+  .code-block .key { color: var(--accent); }
+  .code-block .val { color: var(--primary-light); }
+  .code-block .arrow { color: var(--warning); }
+  
+  /* 表格 */
+  .data-table {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 24px 0;
+  }
+  
+  .data-table table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .data-table th {
+    background: rgba(0,102,255,0.1);
+    padding: 14px 20px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-sub);
+    border-bottom: 1px solid var(--border);
+  }
+  
+  .data-table td {
+    padding: 14px 20px;
+    font-size: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  
+  .data-table tr:last-child td { border-bottom: none; }
+  
+  .data-table code {
+    background: rgba(0,102,255,0.1);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: var(--primary-light);
+  }
+  
+  .data-table .highlight { color: var(--accent); font-weight: 500; }
+  
+  /* 卡片组 */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 24px 0;
+  }
+  
+  .card-grid-2 { grid-template-columns: repeat(2, 1fr); }
+  
+  .info-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  
+  .info-card h4 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .info-card p {
+    font-size: 13px;
+    color: var(--text-sub);
+    line-height: 1.6;
+  }
+  
+  .info-card code {
+    background: rgba(0,212,170,0.1);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: var(--accent);
+  }
+  
+  /* 分隔线 */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 48px 0;
+  }
+  
+  /* 流程图 */
+  .flow-diagram {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    margin: 24px 0;
+  }
+  
+  .flow-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  
+  .flow-box {
+    background: rgba(0,102,255,0.1);
+    border: 1px solid rgba(0,102,255,0.3);
+    border-radius: 10px;
+    padding: 16px 24px;
+    text-align: center;
+    min-width: 160px;
+  }
+  
+  .flow-box.accent {
+    background: rgba(0,212,170,0.1);
+    border-color: rgba(0,212,170,0.3);
+  }
+  
+  .flow-box h5 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  
+  .flow-box p {
+    font-size: 11px;
+    color: var(--text-sub);
+  }
+  
+  .flow-arrow {
+    color: var(--primary-light);
+    font-size: 20px;
+  }
+  
+  .flow-arrow-down {
+    display: block;
+    text-align: center;
+    color: var(--primary-light);
+    font-size: 20px;
+    margin: 8px 0;
+  }
+  
+  /* 层级图 */
+  .layer-diagram {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    margin: 24px 0;
+  }
+  
+  .layer-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  
+  .layer-row:last-child { margin-bottom: 0; }
+  
+  .layer {
+    flex: 1;
+    background: #0D1424;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+  }
+  
+  .layer h5 {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  
+  .layer p {
+    font-size: 11px;
+    color: var(--text-sub);
+  }
+  
+  .layer.brand { 
+    background: rgba(0,102,255,0.1);
+    border-color: rgba(0,102,255,0.3);
+  }
+  
+  .layer.accent {
+    background: rgba(0,212,170,0.1);
+    border-color: rgba(0,212,170,0.3);
+  }
+  
+  /* 标签 */
+  .tag {
+    display: inline-block;
+    padding: 3px 10px;
+    background: rgba(0,102,255,0.1);
+    border-radius: 4px;
+    font-size: 11px;
+    color: var(--primary-light);
+    margin-right: 6px;
+  }
+  
+  .tag.success {
+    background: rgba(0,212,170,0.1);
+    color: var(--accent);
+  }
+  
+  /* 注意 */
+  .note {
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 24px 0;
+    font-size: 13px;
+    color: var(--warning);
+  }
+  
+  .note strong { color: var(--warning); }
+  
+  /* Footer */
+  .footer {
+    padding: 32px 0;
+    text-align: center;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--text-sub);
+  }
+  
+  .footer span { color: var(--accent); }
+  
+  /* 响应式 */
+  @media (max-width: 768px) {
+    .nav { padding: 16px 24px; }
+    .container { padding: 0 24px; }
+    .section-title { font-size: 26px; }
+    .card-grid { grid-template-columns: 1fr; }
+    .card-grid-2 { grid-template-columns: 1fr; }
+    .flow-row { flex-direction: column; }
+    .flow-arrow { transform: rotate(90deg); }
+    .layer-row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 导航 -->
+<nav class="nav">
+  <div class="logo"><a href="Jarvis展示页.html">Jarvis<span>.</span></a></div>
+  <a href="Jarvis展示页.html" class="back-link">返回首页</a>
+</nav>
+
+<!-- 顶部留白 -->
+<div style="height: 80px;"></div>
+
+<!-- 架构总览 -->
+<section>
+  <div class="container">
+    <div class="section-label">01 · 系统架构</div>
+    <h2 class="section-title">架构总览</h2>
+    <p class="section-desc">Jarvis 基于 OpenClaw Agent 构建，核心数据存储在本地 Obsidian Vault，通过飞书生态实现主动交互。</p>
+    
+    <div class="layer-diagram">
+      <div class="layer-row">
+        <div class="layer brand">
+          <h5>用户</h5>
+          <p>通过飞书与 Jarvis 交互</p>
+        </div>
+      </div>
+      <div class="layer-row">
+        <div class="layer brand">
+          <h5>Jarvis (OpenClaw Agent)</h5>
+          <p>AI 推理 · 任务编排 · 记忆管理</p>
+        </div>
+      </div>
+      <div class="layer-row">
+        <div class="layer">
+          <h5>Obsidian Vault</h5>
+          <p>知识库 + 配置中心</p>
+        </div>
+        <div class="layer accent">
+          <h5>飞书生态</h5>
+          <p>IM · 日历 · 任务 · 云文档</p>
+        </div>
+      </div>
+      <div class="layer-row">
+        <div class="layer">
+          <h5>MiniMax / Qwen / Tavily</h5>
+          <p>模型能力 · Embedding · 联网搜索</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="note">
+      <strong>数据流向：</strong>用户请求 → OpenClaw Agent → 读取 Vault 中的记忆/配置 → 调用模型能力 → 执行任务（飞书消息/日历/文件操作）→ 结果写回 Vault
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 核心组件 -->
+<section>
+  <div class="container">
+    <div class="section-label">02 · 核心组件</div>
+    <h2 class="section-title">核心组件详解</h2>
+    
+    <!-- 知识管理层 -->
+    <h3 style="font-size: 18px; font-weight: 600; margin: 32px 0 16px;">知识管理层</h3>
+    <div class="data-table">
+      <table>
+        <thead>
+          <tr>
+            <th>组件</th>
+            <th>路径</th>
+            <th>作用</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="highlight">MEMORY.md</span></td>
+            <td><code>~/.openclaw/workspace/MEMORY.md</code></td>
+            <td>长期记忆：用户偏好、工作规则、重要决策</td>
+          </tr>
+          <tr>
+            <td><span class="highlight">每日笔记</span></td>
+            <td><code>~/文档/openclaw/Daily Notes/YYYY-MM-DD.md</code></td>
+            <td>短期上下文：当日事件、任务、对话记录</td>
+          </tr>
+          <tr>
+            <td>Guides</td>
+            <td><code>~/文档/openclaw/guides/</code></td>
+            <td>结构化知识：教程、参考模板、操作指南</td>
+          </tr>
+          <tr>
+            <td>Reports</td>
+            <td><code>~/文档/openclaw/reports/</code></td>
+            <td>分析沉淀：深度报告、研究资料</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <!-- 配置管理层 -->
+    <h3 style="font-size: 18px; font-weight: 600; margin: 32px 0 16px;">配置管理层</h3>
+    <div class="data-table">
+      <table>
+        <thead>
+          <tr>
+            <th>组件</th>
+            <th>路径</th>
+            <th>作用</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="highlight">Secrets</span></td>
+            <td><code>~/.openclaw/workspace/secrets/</code></td>
+            <td>加密存储：API Key、授权码等敏感配置</td>
+          </tr>
+          <tr>
+            <td>TOOLS.md</td>
+            <td><code>~/.openclaw/workspace/TOOLS.md</code></td>
+            <td>工具链说明：CLI配置、认证状态</td>
+          </tr>
+          <tr>
+            <td>AGENTS.md</td>
+            <td><code>~/.openclaw/workspace/AGENTS.md</code></td>
+            <td>工作区治理：文件规范、任务流程</td>
+          </tr>
+          <tr>
+            <td>SOUL.md</td>
+            <td><code>~/.openclaw/workspace/SOUL.md</code></td>
+            <td>人格定义：Jarvis的身份和行为准则</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <!-- 执行能力层 -->
+    <h3 style="font-size: 18px; font-weight: 600; margin: 32px 0 16px;">执行能力层</h3>
+    <div class="data-table">
+      <table>
+        <thead>
+          <tr>
+            <th>能力</th>
+            <th>工具</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>消息推送</td>
+            <td><code>飞书 IM</code></td>
+            <td>主动发消息、提醒、汇报</td>
+          </tr>
+          <tr>
+            <td>日程管理</td>
+            <td><code>飞书日历</code></td>
+            <td>创建会议、设置提醒</td>
+          </tr>
+          <tr>
+            <td>任务管理</td>
+            <td><code>飞书任务</code></td>
+            <td>创建任务、跟踪进度</td>
+          </tr>
+          <tr>
+            <td>文件操作</td>
+            <td><code>本地 + 云空间</code></td>
+            <td>读文件、上传下载</td>
+          </tr>
+          <tr>
+            <td>定时任务</td>
+            <td><code>OpenClaw Cron</code></td>
+            <td>定期执行、数据备份</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 记忆系统 -->
+<section>
+  <div class="container">
+    <div class="section-label">03 · 记忆系统</div>
+    <h2 class="section-title">记忆系统工作流程</h2>
+    <p class="section-desc">Jarvis 的记忆是分层的：MEMORY.md 管长期，每日笔记管短期，上下文管当前会话。</p>
+    
+    <div class="flow-diagram">
+      <!-- 会话开始 -->
+      <div class="flow-row">
+        <div class="flow-box">
+          <h5>会话开始</h5>
+          <p>读取记忆文件</p>
+        </div>
+      </div>
+      <span class="flow-arrow-down">↓</span>
+      <!-- 读取 -->
+      <div class="flow-row">
+        <div class="flow-box">
+          <h5>MEMORY.md</h5>
+          <p>长期偏好 · 规则 · 决策</p>
+        </div>
+        <div class="flow-box">
+          <h5>Daily Notes</h5>
+          <p>当日上下文 · 事件</p>
+        </div>
+      </div>
+      <span class="flow-arrow-down">↓</span>
+      <!-- 执行 -->
+      <div class="flow-row">
+        <div class="flow-box accent">
+          <h5>执行任务</h5>
+          <p>结合记忆理解用户需求</p>
+        </div>
+      </div>
+      <span class="flow-arrow-down">↓</span>
+      <!-- 评估 -->
+      <div class="flow-row">
+        <div class="flow-box">
+          <h5>会话结束</h5>
+          <p>评估是否写记忆</p>
+        </div>
+      </div>
+      <span class="flow-arrow-down">↓</span>
+      <!-- 写入条件 -->
+      <div class="flow-row">
+        <div class="flow-box" style="min-width: 300px;">
+          <h5>满足写入条件？</h5>
+          <p>实质性对话(>3轮) / 完成重要任务 / 规则变更 / 异常追踪</p>
+        </div>
+      </div>
+      <span class="flow-arrow-down">↓</span>
+      <!-- 写入 -->
+      <div class="flow-row">
+        <div class="flow-box accent">
+          <h5>写入 Obsidian Daily Notes</h5>
+          <p>沉淀当日事件和决策</p>
+        </div>
+        <div class="flow-box accent">
+          <h5>更新 MEMORY.md（如有必要）</h5>
+          <p>长期偏好和规则变更</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 模型配置 -->
+<section>
+  <div class="container">
+    <div class="section-label">04 · 模型配置</div>
+    <h2 class="section-title">模型与能力</h2>
+    
+    <h3 style="font-size: 18px; font-weight: 600; margin: 24px 0 16px;">推理模型</h3>
+    <div class="card-grid card-grid-2">
+      <div class="info-card">
+        <h4>🔮 MiniMax-M2.7 <span class="tag">主要推理</span></h4>
+        <p>200K context window，处理复杂任务、长文本分析、多轮对话。适合需要深度推理的场景。</p>
+      </div>
+      <div class="info-card">
+        <h4>⚡ MiniMax-M2.5 <span class="tag">轻量推理</span></h4>
+        <p>100K context window，日常问答、快速响应。适合简单任务和快速迭代。</p>
+      </div>
+      <div class="info-card">
+        <h4>🔧 openclaw_ctyun-smart-oc</h4>
+        <p>内部定制模型，用于特定功能场景。</p>
+      </div>
+      <div class="info-card">
+        <h4>👁️ glm-4.6v <span class="tag success">多模态</span></h4>
+        <p>视觉理解能力，图片内容分析、OCR 识别、多图理解。</p>
+      </div>
+    </div>
+    
+    <h3 style="font-size: 18px; font-weight: 600; margin: 32px 0 16px;">核心能力模型</h3>
+    <div class="card-grid card-grid-2">
+      <div class="info-card">
+        <h4>🌐 联网搜索</h4>
+        <p><code>mmx search</code> / <code>Tavily API</code><br>实时信息检索，替代传统爬虫。支持关键词搜索、新闻检索。</p>
+      </div>
+      <div class="info-card">
+        <h4>🖼️ 图片理解</h4>
+        <p><code>mmx vision describe</code><br>图片内容分析、OCR 识别、多图理解。支持截图、照片、文档图片。</p>
+      </div>
+      <div class="info-card">
+        <h4>🔍 RAG Embedding</h4>
+        <p><code>Qwen Embedding</code><br>文档向量化，支持 RAG 检索。精准匹配相关文档片段。</p>
+      </div>
+      <div class="info-card">
+        <h4>⏰ 定时任务</h4>
+        <p><code>OpenClaw Cron</code><br>周期性任务调度：备份简报、每日提醒、数据同步。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- RAG 架构 -->
+<section>
+  <div class="container">
+    <div class="section-label">05 · RAG 检索</div>
+    <h2 class="section-title">RAG 检索架构</h2>
+    <p class="section-desc">当用户提问时，Jarvis 通过 RAG（检索增强生成）从本地知识库中检索相关文档，结合上下文生成有据可查的回答。</p>
+    
+    <div class="flow-diagram">
+      <div class="flow-row">
+        <div class="flow-box" style="min-width: 200px;">
+          <h5>用户问题</h5>
+          <p>自然语言提问</p>
+        </div>
+      </div>
+      <span class="flow-arrow-down">↓</span>
+      <div class="flow-row">
+        <div class="flow-box">
+          <h5>Qwen Embedding</h5>
+          <p>问题向量化</p>
+        </div>
+        <div class="flow-box">
+          <h5>向量检索</h5>
+          <p>匹配 Vault 中的文档</p>
+        </div>
+      </div>
+      <span class="flow-arrow-down">↓</span>
+      <div class="flow-row">
+        <div class="flow-box accent">
+          <h5>最相关文档片段</h5>
+          <p>Top-K 相关上下文</p>
+        </div>
+      </div>
+      <span class="flow-arrow-down">↓</span>
+      <div class="flow-row">
+        <div class="flow-box accent">
+          <h5>上下文 + 问题</h5>
+          <p>合并检索结果</p>
+        </div>
+      </div>
+      <span class="flow-arrow-down">↓</span>
+      <div class="flow-row">
+        <div class="flow-box">
+          <h5>MiniMax-M2.7</h5>
+          <p>生成有据可查的回答</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="note">
+      <strong>为什么需要 RAG：</strong>模型的 context window 有限，无法同时记住所有文档。RAG 通过检索 + 生成的方式，让 Jarvis 在回答时能引用具体文档，而不是凭空编造。
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 安全机制 -->
+<section>
+  <div class="container">
+    <div class="section-label">06 · 安全机制</div>
+    <h2 class="section-title">安全与加密</h2>
+    
+    <div class="card-grid">
+      <div class="info-card">
+        <h4>🔐 凭证加密</h4>
+        <p>所有 API Key 使用 <code>OpenSSL AES-256-CBC</code> + <code>PBKDF2</code> 加密存储。密钥文件权限 600，仅自己可读写。</p>
+      </div>
+      <div class="info-card">
+        <h4>🛡️ 权限控制</h4>
+        <p>Secrets 目录严格权限控制，对话中绝不出现明文凭证内容。任何外部操作前必须确认。</p>
+      </div>
+      <div class="info-card">
+        <h4>📍 本地优先</h4>
+        <p>所有数据存在你自己的 Obsidian Vault，不经过第三方服务器。飞书 OAuth 仅用于消息推送和日历管理。</p>
+      </div>
+      <div class="info-card">
+        <h4>🔄 定时备份</h4>
+        <p>OpenClaw Cron 自动化备份到飞书知识库。每天 03:00 同步核心配置，每天 23:00 检查每日笔记。</p>
+      </div>
+      <div class="info-card">
+        <h4>📋 审计追溯</h4>
+        <p>所有敏感操作记录在案。配置变更、文件访问都有时间戳，可追溯、可回滚。</p>
+      </div>
+      <div class="info-card">
+        <h4>🚫 防误删</h4>
+        <p>删除操作前必须二次确认。使用 trash 替代 rm，避免误删重要文件。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 备份机制 -->
+<section>
+  <div class="container">
+    <div class="section-label">07 · 备份策略</div>
+    <h2 class="section-title">定时备份机制</h2>
+    
+    <div class="data-table">
+      <table>
+        <thead>
+          <tr>
+            <th>内容</th>
+            <th>备份位置</th>
+            <th>频率</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>SOUL / IDENTITY / AGENTS / MEMORY</code></td>
+            <td>飞书知识库</td>
+            <td><span class="highlight">每天 03:00</span></td>
+          </tr>
+          <tr>
+            <td><code>Daily Notes</code></td>
+            <td>飞书知识库</td>
+            <td><span class="highlight">每天 23:00</span></td>
+          </tr>
+          <tr>
+            <td><code>skills/</code> 技能文件夹</td>
+            <td>飞书知识库</td>
+            <td>每周</td>
+          </tr>
+          <tr>
+            <td><code>references/</code></td>
+            <td>飞书知识库</td>
+            <td>每周记忆整理后备份</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="note">
+      <strong>备份目标：</strong>飞书知识库节点 <code>YJ0tf0CBMlTDkldjxKicgbyGnqd</code>（核心配置）、<code>E1yZfWFRMlErYtdBCsTcztjvnnm</code>（每日笔记）
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- API 工具链 -->
+<section>
+  <div class="container">
+    <div class="section-label">08 · API 与工具</div>
+    <h2 class="section-title">API 与工具链</h2>
+    
+    <div class="data-table">
+      <table>
+        <thead>
+          <tr>
+            <th>工具</th>
+            <th>用途</th>
+            <th>认证方式</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>飞书 IM</td>
+            <td>消息推送、群聊管理</td>
+            <td><span class="tag">OAuth（用户身份）</span></td>
+          </tr>
+          <tr>
+            <td>飞书日历</td>
+            <td>日程管理、创建会议</td>
+            <td><span class="tag">OAuth（用户身份）</span></td>
+          </tr>
+          <tr>
+            <td>飞书任务</td>
+            <td>任务管理、跟踪进度</td>
+            <td><span class="tag">OAuth（用户身份）</span></td>
+          </tr>
+          <tr>
+            <td>飞书云文档</td>
+            <td>文档读写、创建文档</td>
+            <td><span class="tag">OAuth（用户身份）</span></td>
+          </tr>
+          <tr>
+            <td>飞书多维表格</td>
+            <td>数据管理、表格操作</td>
+            <td><span class="tag">OAuth（用户身份）</span></td>
+          </tr>
+          <tr>
+            <td>Obsidian</td>
+            <td>本地知识库</td>
+            <td><span class="tag success">文件系统（本地）</span></td>
+          </tr>
+          <tr>
+            <td>MiniMax API</td>
+            <td>模型能力</td>
+            <td><span class="tag">API Key（加密存储）</span></td>
+          </tr>
+          <tr>
+            <td>Tavily API</td>
+            <td>联网搜索</td>
+            <td><span class="tag">API Key（加密存储）</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <p>Built with <span>♥</span> by Jarvis · OpenClaw Agent · 技术详情页</p>
+  </div>
+</footer>
+
+</body>
+</html>
