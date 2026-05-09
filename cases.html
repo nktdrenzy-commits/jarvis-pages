@@ -392,74 +392,73 @@
   <div class="tab-panel" id="case3">
     <div class="case-section">
       <div class="section-label">案例三</div>
-      <h2 class="section-title">某建材配方管理系统 从需求文档到可运行系统</h2>
-      <p class="section-desc">75页需求PDF → 可运行系统设计 + Vue3前端；与业界标准Workbuddy对标，精确诊断三大差距。</p>
+      <h2 class="section-title">Jarvis × DevOps 流水线框架 — 从"人工传话"到"新人直接上手"</h2>
+      <p class="section-desc">多AI agent协同维护项目的规则体系化建设，消除口头传话，实现靠文档运转。</p>
 
       <div class="tag-list">
-        <span class="tag">系统开发</span>
-        <span class="tag">Vue3</span>
-        <span class="tag accent">业界对标</span>
+        <span class="tag">DevOps</span>
+        <span class="tag">AI Agent</span>
+        <span class="tag accent">体系化</span>
       </div>
 
       <div class="flow-diagram">
         <h4>实施路径</h4>
         <div class="flow-row">
-          <div class="flow-box"><h5>需求分析</h5><p>75页PDF提取</p></div>
+          <div class="flow-box"><h5>规则书面化</h5><p>skill规范化</p></div>
           <span class="flow-arrow">→</span>
-          <div class="flow-box"><h5>系统设计</h5><p>536行文档</p></div>
+          <div class="flow-box"><h5>注册表</h5><p>registry.yaml</p></div>
           <span class="flow-arrow">→</span>
-          <div class="flow-box"><h5>前端开发</h5><p>17个页面</p></div>
+          <div class="flow-box"><h5>自动化</h5><p>CI/CD</p></div>
           <span class="flow-arrow">→</span>
-          <div class="flow-box accent"><h5>业界对标</h5><p>精确诊断差距</p></div>
+          <div class="flow-box accent"><h5>交付</h5><p>自动部署</p></div>
         </div>
       </div>
 
       <div class="card-grid">
         <div class="info-card">
           <div class="emoji">📖</div>
-          <h4>需求提取</h4>
-          <p>AI全文解析75页PDF规格说明书，输出系统设计文档（536行）：总体架构、11张核心表DDL、公式引擎设计、17个接口。</p>
+          <h4>skill规范化</h4>
+          <p>把"口头规则"变成"书面 skill"：devops流水线初始化指南.md，禁止直接push main（必须PR）、禁止硬编码token。</p>
         </div>
         <div class="info-card">
-          <div class="emoji">🖥️</div>
-          <h4>前端开发</h4>
-          <p>Vue3 + Element Plus + Vite，17个页面，localhost:5174可运行，配置完整Mock数据支撑增删改查。</p>
+          <div class="emoji">📋</div>
+          <h4>项目注册表</h4>
+          <p>projects/registry.yaml作为单一数据源，切换项目只改一个布尔值，不乱动其他配置。</p>
         </div>
         <div class="info-card">
-          <div class="emoji">🔍</div>
-          <h4>业界对标</h4>
-          <p>与Workbuddy横向对比，精确到"少哪张表、缺哪个算法、少哪个功能模块"，改进方向直接可操作。</p>
+          <div class="emoji">⚙️</div>
+          <h4>可执行skill</h4>
+          <p>project-scaffold、project-switch、website-naming、case-builder——每件事都有触发条件和使用方式。</p>
         </div>
       </div>
 
-      <h3 style="font-size:18px;font-weight:600;margin:40px 0 16px;">核心差距（精确诊断）</h3>
+      <h3 style="font-size:18px;font-weight:600;margin:40px 0 16px;">解决的核心问题</h3>
       <div class="data-table">
         <table>
-          <thead><tr><th>差距类型</th><th>具体差距</th></tr></thead>
+          <thead><tr><th>问题</th><th>解决方案</th></tr></thead>
           <tbody>
-            <tr><td>数据库设计严重不全</td><td>Workbuddy有38张表，Jarvis只有11张。少工厂/车间/养护方式/桩长/同步规则等27张表。</td></tr>
-            <tr><td>核心算法完全缺失</td><td>BOM上下查递归展开算法、清单计算flatten逻辑、循环引用检测均未设计。</td></tr>
-            <tr><td>没有生产运维规划</td><td>没有部署架构图、高可用方案、XXL-Job定时任务、ELK日志。</td></tr>
+            <tr><td>新agent靠口头解释</td><td>读devops流水线初始化指南.md就能上手</td></tr>
+            <tr><td>不知道现在管哪个项目</td><td>registry.yaml的current标记，一目了然</td></tr>
+            <tr><td>git push超时</td><td>GitHub Contents API逐文件推送</td></tr>
+            <tr><td>飞书多app路由冲突</td><td>独立账号+独立app配置</td></tr>
           </tbody>
         </table>
       </div>
 
-      <h3 style="font-size:18px;font-weight:600;margin:40px 0 16px;">成果展示</h3>
-      <div class="result-item"><div class="result-icon">📄</div><div><h4>系统设计文档</h4><p>536行，含11张核心表DDL、公式引擎设计、17个接口</p></div></div>
-      <div class="result-item"><div class="result-icon">🖥️</div><div><h4>Vue3前端</h4><p>17个页面，可运行，localhost:5174</p></div></div>
-      <div class="result-item"><div class="result-icon">🔍</div><div><h4>两版对比报告</h4><p>系统设计文档对比 + 前端代码对比</p></div></div>
+      <h3 style="font-size:18px;font-weight:600;margin:40px 0 16px;">核心产出</h3>
+      <div class="result-item"><div class="result-icon">📋</div><div><h4>项目注册表</h4><p>registry.yaml：多项目统一注册表</p></div></div>
+      <div class="result-item"><div class="result-icon">🛠️</div><div><h4>4个标准化skill</h4><p>初始化/切换/命名规范/案例积累</p></div></div>
+      <div class="result-item"><div class="result-icon">📖</div><div><h4>操作手册</h4><p>devops流水线初始化指南.md</p></div></div>
+      <div class="result-item"><div class="result-icon">⚡</div><div><h4>GitHub Actions</h4><p>自动部署，link-check不阻断发布</p></div></div>
 
-      <div class="download-section">
-        <h4>原始产出文件（已脱敏）</h4>
-        <div class="download-list">
-          <a href="files/case3-design.md" class="download-item">系统设计文档_V1.0.md</a>
-          <a href="files/case3-report-design.md" class="download-item">两版系统设计文档对比报告.md</a>
-          <a href="files/case3-report-code.md" class="download-item">两版代码对比报告.md</a>
-        </div>
-      </div>
+      <h3 style="font-size:18px;font-weight:600;margin:40px 0 16px;">客户价值</h3>
+      <p style="font-size:16px;line-height:1.8;color:#333;background:#f8f9fa;padding:20px;border-radius:8px;border-left:4px solid #2196F3;">
+原来新agent进来，Jarvis要花20分钟口头解释"先读哪个文件、用什么命令、什么不能做"——说得口干，还不一定说得清楚。<br><br>
+现在新agent进来，读一份devops流水线初始化指南.md就能上手。遇到问题查skill，skill里有触发条件、有使用方式、有输出格式。<br><br>
+<strong>整套体系从"靠人传话"变成了"靠文档运转"——这不是省了20分钟的事，是省了无数次"说不清、记不住、再来一遍"的心智消耗。</strong>
+      </p>
     </div>
   </div>
-
   <!-- ── 案例四内容 ── -->
   <div class="tab-panel" id="case4">
     <div class="case-section">
