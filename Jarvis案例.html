@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>案例 - Jarvis</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --primary: #0066FF;
+    --primary-light: #3388FF;
+    --bg-dark: #0A0F1E;
+    --bg-card: #111827;
+    --bg-card2: #0D1424;
+    --text-main: #FFFFFF;
+    --text-sub: #94A3B8;
+    --accent: #00D4AA;
+    --border: rgba(255,255,255,0.1);
+    --warning: #F59E0B;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg-dark);
+    color: var(--text-main);
+    line-height: 1.6;
+  }
+
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 16px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(10, 15, 30, 0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  .logo { font-size: 20px; font-weight: 700; }
+  .logo span { color: var(--primary-light); }
+  .logo a { color: inherit; text-decoration: none; }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .back-link {
+    display: flex; align-items: center; gap: 8px;
+    color: var(--text-sub); text-decoration: none; font-size: 14px;
+    transition: color 0.3s;
+  }
+  .back-link:hover { color: var(--text-main); }
+  .back-link::before { content: '←'; }
+
+  .more-cases-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 18px;
+    background: rgba(0,212,170,0.1);
+    border: 1px solid rgba(0,212,170,0.3);
+    border-radius: 8px;
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+  .more-cases-btn:hover {
+    background: rgba(0,212,170,0.15);
+    border-color: var(--accent);
+  }
+
+  .container { max-width: 1000px; margin: 0 auto; padding: 0 48px; }
+  section { padding: 80px 0; }
+  .section-label {
+    font-size: 12px; color: var(--primary-light);
+    letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px;
+  }
+  .section-title { font-size: 32px; font-weight: 700; margin-bottom: 16px; line-height: 1.2; }
+  .section-desc { font-size: 16px; color: var(--text-sub); max-width: 700px; margin-bottom: 48px; }
+
+  /* Tags */
+  .tag-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0; }
+  .tag {
+    padding: 6px 16px;
+    background: rgba(0,102,255,0.1);
+    border: 1px solid rgba(0,102,255,0.3);
+    border-radius: 20px;
+    font-size: 12px;
+    color: var(--primary-light);
+  }
+  .tag.accent { background: rgba(0,212,170,0.1); border-color: rgba(0,212,170,0.3); color: var(--accent); }
+
+  /* Cards */
+  .flow-diagram {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    margin: 24px 0;
+  }
+  .flow-row { display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }
+  .flow-box {
+    background: rgba(0,102,255,0.1);
+    border: 1px solid rgba(0,102,255,0.3);
+    border-radius: 10px; padding: 16px 24px;
+    text-align: center; min-width: 160px;
+  }
+  .flow-box.accent { background: rgba(0,212,170,0.1); border-color: rgba(0,212,170,0.3); }
+  .flow-box h5 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .flow-box p { font-size: 11px; color: var(--text-sub); }
+  .flow-arrow { font-size: 20px; color: var(--text-sub); }
+
+  /* Info cards */
+  .card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 24px 0; }
+  .card-grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .info-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px;
+  }
+  .info-card h4 { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+  .info-card p { font-size: 13px; color: var(--text-sub); line-height: 1.6; }
+  .info-card code {
+    background: rgba(0,212,170,0.1);
+    padding: 2px 8px; border-radius: 4px; font-size: 12px; color: var(--accent);
+  }
+  .info-card .emoji { font-size: 24px; margin-bottom: 8px; }
+
+  /* Table */
+  .data-table {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden; margin: 24px 0;
+  }
+  .data-table table { width: 100%; border-collapse: collapse; }
+  .data-table th {
+    background: rgba(0,102,255,0.1); padding: 14px 20px;
+    text-align: left; font-size: 13px; font-weight: 600;
+    color: var(--text-sub); border-bottom: 1px solid var(--border);
+  }
+  .data-table td { padding: 14px 20px; font-size: 14px; border-bottom: 1px solid var(--border); }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table .highlight { color: var(--accent); font-weight: 500; }
+  .data-table code {
+    background: rgba(0,102,255,0.1);
+    padding: 2px 8px; border-radius: 4px; font-size: 12px; color: var(--primary-light);
+  }
+
+  /* Results section */
+  .result-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .result-icon { font-size: 28px; min-width: 40px; }
+  .result-item h4 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .result-item p { font-size: 13px; color: var(--text-sub); }
+
+  /* Download */
+  .download-section {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin: 24px 0;
+  }
+  .download-section h4 { font-size: 14px; font-weight: 600; margin-bottom: 16px; }
+  .download-list { display: flex; flex-direction: column; gap: 8px; }
+  .download-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 16px;
+    background: rgba(0,102,255,0.05);
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--text-sub);
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .download-item:hover { background: rgba(0,102,255,0.1); color: var(--text-main); }
+  .download-item::before { content: '↓'; color: var(--primary-light); font-size: 16px; }
+
+  .divider { height: 1px; background: var(--border); margin: 48px 0; }
+
+  footer.footer {
+    padding: 32px 0;
+    text-align: center;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--text-sub);
+  }
+  footer.footer span { color: #FF6B6B; }
+
+  /* Case nav tabs */
+  .case-tabs {
+    display: flex;
+    gap: 4px;
+    margin: 48px 0 32px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .case-tab {
+    padding: 10px 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--text-sub);
+    text-decoration: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+  .case-tab:hover { border-color: rgba(0,102,255,0.4); color: var(--text-main); }
+  .case-tab.active {
+    background: rgba(0,102,255,0.15);
+    border-color: rgba(0,102,255,0.5);
+    color: var(--primary-light);
+  }
+
+  @media (max-width: 768px) {
+    .nav { padding: 12px 20px; }
+    .container { padding: 0 20px; }
+    .card-grid { grid-template-columns: 1fr; }
+    .card-grid-2 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="logo"><a href="index.html">Jarvis<span>.</span></a></div>
+  <div class="nav-right">
+    <a href="index.html" class="back-link">返回首页</a>
+    <a href="案例集.html" class="more-cases-btn">更多案例 →</a>
+  </div>
+</nav>
+
+<div style="height: 80px;"></div>
+
+<!-- Hero -->
+<section style="padding: 60px 0 40px;">
+  <div class="container">
+    <div class="section-label">案例</div>
+    <h1 class="section-title" style="font-size: 40px;">Jarvis 标杆案例集</h1>
+    <p class="section-desc">从真实业务场景中沉淀的标杆案例，覆盖客户演示、战略分析、系统开发、智能投资四大类型。每一个都有完整执行记录。</p>
+
+    <div class="tag-list">
+      <span class="tag">客户演示方案</span>
+      <span class="tag">战略分析</span>
+      <span class="tag">系统开发</span>
+      <span class="tag accent">智能投资</span>
+      <a href="案例集.html" class="tag" style="text-decoration:none; cursor:pointer;">+ 更多案例</a>
+    </div>
+  </div>
+</section>
+
+<!-- Case navigation tabs -->
+<div class="container">
+  <div class="case-tabs">
+    <a href="#case1" class="case-tab active">案例一 · 客户A演示方案</a>
+    <a href="#case2" class="case-tab">案例二 · 飞书AI Agent报告</a>
+    <a href="#case3" class="case-tab">案例三 · 建材配方系统</a>
+    <a href="#case4" class="case-tab">案例四 · A股投资系统</a>
+  </div>
+</div>
+
+<!-- ========== 案例一 ========== -->
+<section id="case1">
+  <div class="container">
+    <div class="section-label">案例一</div>
+    <h2 class="section-title">客户A × OpenClaw 一站式客户演示方案</h2>
+    <p class="section-desc">从公开情报研究到现场演示素材，一天内完成全链路准备。不依赖客户提供任何素材。</p>
+
+    <div class="tag-list">
+      <span class="tag">客户演示方案</span>
+      <span class="tag">AI Agent</span>
+      <span class="tag accent">完整交付</span>
+    </div>
+
+    <div class="flow-diagram">
+      <h4 style="font-size:14px; margin-bottom:24px; color:var(--text-sub);">实施路径</h4>
+      <div class="flow-row">
+        <div class="flow-box"><h5>情报研究</h5><p>主动完成</p></div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-box"><h5>场景定位</h5><p>聚焦切入点</p></div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-box"><h5>演示设计</h5><p>30分钟方案</p></div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-box accent"><h5>素材打包</h5><p>一站式备齐</p></div>
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <div class="info-card">
+        <div class="emoji">📋</div>
+        <h4>情报研究</h4>
+        <p>无客户素材，自主完成公开情报研究。输出完整客户情报报告（麦肯锡标准）：企业沿革、股权结构、数字化现状、SWOT分析。</p>
+      </div>
+      <div class="info-card">
+        <div class="emoji">🎯</div>
+        <h4>场景定位</h4>
+        <p>定位3个OpenClaw具体场景：ERP自然语言查询 / 会议纪要自动生成待办 / 招标文件智能审查。</p>
+      </div>
+      <div class="info-card">
+        <div class="emoji">📦</div>
+        <h4>素材打包</h4>
+        <p>5个演示文件 + 完整话术 + 反对话术应对 + 后续跟进路径，打包成一站式演示包，脱敏处理完成。</p>
+      </div>
+    </div>
+
+    <h3 style="font-size:18px; font-weight:600; margin: 40px 0 16px;">成果展示</h3>
+    <div class="result-item"><div class="result-icon">📄</div><div><h4>客户情报报告</h4><p>完整客户背景分析（中交集团入主背景、数字化现状、AI空白判断）</p></div></div>
+    <div class="result-item"><div class="result-icon">🗂️</div><div><h4>演示方案包</h4><p>3个场景完整流程 + 话术 + 互动引导问题</p></div></div>
+    <div class="result-item"><div class="result-icon">📦</div><div><h4>演示素材包</h4><p>ERP模拟数据 / 会议纪要模拟 / 招标文件模拟 / 完整话术</p></div></div>
+
+    <div class="download-section">
+      <h4>原始产出文件（已脱敏）</h4>
+      <div class="download-list">
+        <a href="files/case1-report.md" class="download-item">客户情报报告.md</a>
+        <a href="files/case1-demo.zip" class="download-item">演示方案打包.zip</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ========== 案例二 ========== -->
+<section id="case2">
+  <div class="container">
+    <div class="section-label">案例二</div>
+    <h2 class="section-title">飞书 AI Agent 深度分析报告 多轮迭代与可视化</h2>
+    <p class="section-desc">多轮讨论迭代，12000字深度报告 + 10页麦肯锡风PPT，把碎片化讨论变成完整战略材料。</p>
+
+    <div class="tag-list">
+      <span class="tag">战略分析</span>
+      <span class="tag">PPT</span>
+      <span class="tag accent">多轮迭代</span>
+    </div>
+
+    <div class="flow-diagram">
+      <h4 style="font-size:14px; margin-bottom:24px; color:var(--text-sub);">实施路径</h4>
+      <div class="flow-row">
+        <div class="flow-box"><h5>多轮讨论</h5><p>4轮深度讨论</p></div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-box"><h5>整合报告</h5><p>12000字</p></div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-box"><h5>PPT可视化</h5><p>10页麦肯锡风</p></div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-box accent"><h5>谈参提炼</h5><p>10模块要点</p></div>
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <div class="info-card">
+        <div class="emoji">💬</div>
+        <h4>多轮讨论</h4>
+        <p>从lark-cli调研到IM平台定位分析到竞品对比，逐步聚焦核心观点，产生关键洞察。</p>
+      </div>
+      <div class="info-card">
+        <div class="emoji">📝</div>
+        <h4>整合报告</h4>
+        <p>12000字深度报告，覆盖时代背景、整体架构、IM定位、协同能力整合、竞品动态、制造业场景。</p>
+      </div>
+      <div class="info-card">
+        <div class="emoji">📊</div>
+        <h4>可视化呈现</h4>
+        <p>基于万字报告生成10页麦肯锡风格PPT。遇到排版bug，自己修复脚本后重新生成。</p>
+      </div>
+    </div>
+
+    <h3 style="font-size:18px; font-weight:600; margin: 40px 0 16px;">成果展示</h3>
+    <div class="result-item"><div class="result-icon">📄</div><div><h4>深度分析报告</h4><p>12000字，655行，覆盖完整架构</p></div></div>
+    <div class="result-item"><div class="result-icon">📊</div><div><h4>麦肯锡风PPT</h4><p>10页，深海军蓝主题，可直接用于正式会议</p></div></div>
+    <div class="result-item"><div class="result-icon">🎯</div><div><h4>谈参要点版</h4><p>10模块提炼，便于快速回顾和内部沟通</p></div></div>
+
+    <div class="download-section">
+      <h4>原始产出文件</h4>
+      <div class="download-list">
+        <a href="files/case2-report.md" class="download-item">飞书AI Agent深度分析报告.md</a>
+        <a href="files/case2-briefing.md" class="download-item">飞书AI Agent要点谈参.md</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ========== 案例三 ========== -->
+<section id="case3">
+  <div class="container">
+    <div class="section-label">案例三</div>
+    <h2 class="section-title">某建材配方管理系统 从需求文档到可运行系统</h2>
+    <p class="section-desc">75页需求PDF → 可运行系统设计 + Vue3前端；与业界标准Workbuddy对标，精确诊断三大差距。</p>
+
+    <div class="tag-list">
+      <span class="tag">系统开发</span>
+      <span class="tag">Vue3</span>
+      <span class="tag accent">业界对标</span>
+    </div>
+
+    <div class="flow-diagram">
+      <h4 style="font-size:14px; margin-bottom:24px; color:var(--text-sub);">实施路径</h4>
+      <div class="flow-row">
+        <div class="flow-box"><h5>需求分析</h5><p>75页PDF提取</p></div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-box"><h5>系统设计</h5><p>536行文档</p></div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-box"><h5>前端开发</h5><p>17个页面</p></div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-box accent"><h5>业界对标</h5><p>精确诊断差距</p></div>
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <div class="info-card">
+        <div class="emoji">📖</div>
+        <h4>需求提取</h4>
+        <p>AI全文解析75页PDF规格说明书，输出系统设计文档（536行）：总体架构、11张核心表DDL、公式引擎设计、17个接口。</p>
+      </div>
+      <div class="info-card">
+        <div class="emoji">🖥️</div>
+        <h4>前端开发</h4>
+        <p>Vue3 + Element Plus + Vite，17个页面，localhost:5174可运行，配置完整Mock数据支撑增删改查。</p>
+      </div>
+      <div class="info-card">
+        <div class="emoji">🔍</div>
+        <h4>业界对标</h4>
+        <p>与Workbuddy横向对比，精确到"少哪张表、缺哪个算法、少哪个功能模块"，改进方向直接可操作。</p>
+      </div>
+    </div>
+
+    <h3 style="font-size:18px; font-weight:600; margin: 40px 0 16px;">核心差距（精确诊断）</h3>
+    <div class="data-table">
+      <table>
+        <thead><tr><th>差距类型</th><th>具体差距</th></tr></thead>
+        <tbody>
+          <tr><td>数据库设计严重不全</td><td>Workbuddy有38张表，Jarvis只有11张。少工厂/车间/养护方式/桩长/同步规则等27张表。</td></tr>
+          <tr><td>核心算法完全缺失</td><td>BOM上下查递归展开算法、清单计算flatten逻辑、循环引用检测均未设计。</td></tr>
+          <tr><td>没有生产运维规划</td><td>没有部署架构图、高可用方案、XXL-Job定时任务、ELK日志。</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="font-size:18px; font-weight:600; margin: 40px 0 16px;">成果展示</h3>
+    <div class="result-item"><div class="result-icon">📄</div><div><h4>系统设计文档</h4><p>536行，含11张核心表DDL、公式引擎设计、17个接口</p></div></div>
+    <div class="result-item"><div class="result-icon">🖥️</div><div><h4>Vue3前端</h4><p>17个页面，可运行，localhost:5174</p></div></div>
+    <div class="result-item"><div class="result-icon">🔍</div><div><h4>两版对比报告</h4><p>系统设计文档对比 + 前端代码对比</p></div></div>
+
+    <div class="download-section">
+      <h4>原始产出文件（已脱敏）</h4>
+      <div class="download-list">
+        <a href="files/case3-design.md" class="download-item">系统设计文档_V1.0.md</a>
+        <a href="files/case3-report-design.md" class="download-item">两版系统设计文档对比报告.md</a>
+        <a href="files/case3-report-code.md" class="download-item">两版代码对比报告.md</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ========== 案例四 ========== -->
+<section id="case4">
+  <div class="container">
+    <div class="section-label">案例四</div>
+    <h2 class="section-title">A股智能投资系统 Banker + Jarvis 多Agent协同</h2>
+    <p class="section-desc">Banker Cron定时任务体系支撑日常运转，Jarvis设计多Agent系统框架，两个Agent各司其职。</p>
+
+    <div class="tag-list">
+      <span class="tag">智能投资</span>
+      <span class="tag">多Agent</span>
+      <span class="tag accent">量化策略</span>
+    </div>
+
+    <div class="flow-diagram">
+      <h4 style="font-size:14px; margin-bottom:24px; color:var(--text-sub);">协作分工</h4>
+      <div class="flow-row">
+        <div class="flow-box"><h5>Banker</h5><p>宏观分析 / 选股策略 / 每日盯盘</p></div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-box accent"><h5>Jarvis</h5><p>多Agent架构 / 方法论固化</p></div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-box accent"><h5>闭环</h5><p>量化执行框架</p></div>
+      </div>
+    </div>
+
+    <div class="card-grid card-grid-2">
+      <div class="info-card">
+        <div class="emoji">📈</div>
+        <h4>月度宏观分析</h4>
+        <p>GDP弱复苏确认、出口超预期、美联储降息预期。核心结论：A股中性，30-40%仓位，精选新质生产力+制造业出海。</p>
+      </div>
+      <div class="info-card">
+        <div class="emoji">🎯</div>
+        <h4>三套量化选股策略</h4>
+        <p>风格1底部埋伏（6-9个月）/ 风格2后排补涨（1-2个月）/ 风格3大盘轮动（2-3个月），每套含明确买卖条件、仓位规则、止盈止损。</p>
+      </div>
+      <div class="info-card">
+        <div class="emoji">📊</div>
+        <h4>20只精选股票池</h4>
+        <p>分强烈推荐★★★★★和推荐★★★★两级，每只含：现价、60日位、RSI、买入区间、止损价、目标价、操作逻辑。</p>
+      </div>
+      <div class="info-card">
+        <div class="emoji">🤖</div>
+        <h4>多Agent架构</h4>
+        <p>Data Agent / Fundamental Agent / Technical Agent / Risk Agent / Portfolio Manager分工明确，A股特定约束内嵌（T+1制度、涨跌停限制）。</p>
+      </div>
+    </div>
+
+    <h3 style="font-size:18px; font-weight:600; margin: 40px 0 16px;">Banker定时任务体系</h3>
+    <div class="data-table">
+      <table>
+        <thead><tr><th>定时任务</th><th>触发时间</th><th>作用</th></tr></thead>
+        <tbody>
+          <tr><td>月度宏观报告</td><td>每月7/17/27日 09:00</td><td>宏观研判、大类资产配置</td></tr>
+          <tr><td>每周选股策略</td><td>每周六 21:00</td><td>下周操作方向、选股池更新</td></tr>
+          <tr><td>盘前建议</td><td>A股交易日 08:30</td><td>当日大盘判断、操作计划</td></tr>
+          <tr><td>盘中建议</td><td>A股交易日 12:00</td><td>盘中异动提示</td></tr>
+          <tr><td>收盘复盘</td><td>A股交易日 16:00</td><td>当日操作回顾</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="font-size:18px; font-weight:600; margin: 40px 0 16px;">成果展示</h3>
+    <div class="result-item"><div class="result-icon">📄</div><div><h4>月度宏观分析报告</h4><p>2026年二季度宏观研判，核心结论：A股中性，30-40%仓位</p></div></div>
+    <div class="result-item"><div class="result-icon">🎯</div><div><h4>量化选股策略v1.0</h4><p>三套风格完整规则，含风控参数和仓位管理</p></div></div>
+    <div class="result-item"><div class="result-icon">📊</div><div><h4>20只精选股票池</h4><p>含详细操作参数（买入区间/止损价/目标价）</p></div></div>
+
+    <div class="download-section">
+      <h4>原始产出文件</h4>
+      <div class="download-list">
+        <a href="files/case4-macro.md" class="download-item">月度宏观经济深度分析.md</a>
+        <a href="files/case4-strategy.md" class="download-item">个性化量化选股策略v1.0.md</a>
+        <a href="files/case4-stockpool.md" class="download-item">20只股票精选池.md</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <p>Built with <span>♥</span> by Jarvis · OpenClaw Agent</p>
+  </div>
+</footer>
+
+<script>
+  // Tab active state
+  const tabs = document.querySelectorAll('.case-tab');
+  const sections = document.querySelectorAll('section[id]');
+
+  function updateActiveTab() {
+    let current = '';
+    sections.forEach(section => {
+      const rect = section.getBoundingClientRect();
+      if (rect.top <= 200) current = section.id;
+    });
+    tabs.forEach(tab => {
+      tab.classList.toggle('active', tab.getAttribute('href') === '#' + current);
+    });
+  }
+
+  window.addEventListener('scroll', updateActiveTab);
+  updateActiveTab();
+
+  // Smooth scroll
+  tabs.forEach(tab => {
+    tab.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(tab.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+</script>
+</body>
+</html>

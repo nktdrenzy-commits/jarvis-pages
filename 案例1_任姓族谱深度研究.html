@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>任姓族谱深度研究</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+    font-size: 16px;
+    line-height: 1.8;
+    color: #222;
+    background: #f5f5f5;
+    padding: 0 0 60px 0;
+  }
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    background: #fff;
+  }
+  .header {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    color: #fff;
+    padding: 40px 28px 32px;
+  }
+  .header .tag {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 12px;
+    margin-bottom: 14px;
+    letter-spacing: 1px;
+  }
+  .header h1 {
+    font-size: 26px;
+    font-weight: bold;
+    line-height: 1.4;
+    margin-bottom: 12px;
+  }
+  .header .meta {
+    font-size: 13px;
+    color: rgba(255,255,255,0.65);
+  }
+  .toc {
+    background: #f0f4ff;
+    padding: 20px 28px;
+    border-left: 4px solid #3a6fee;
+  }
+  .toc-title {
+    font-size: 14px;
+    font-weight: bold;
+    color: #3a6fee;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .toc ol {
+    padding-left: 18px;
+  }
+  .toc li {
+    font-size: 14px;
+    color: #555;
+    padding: 3px 0;
+  }
+  .toc li a { color: #333; text-decoration: none; }
+  .toc li a:hover { color: #3a6fee; }
+  .section {
+    padding: 28px 28px 8px;
+  }
+  .section-title {
+    font-size: 19px;
+    font-weight: bold;
+    color: #1a1a2e;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #1a1a2e;
+    margin-bottom: 18px;
+  }
+  .subsection {
+    margin-bottom: 22px;
+  }
+  .subsection-title {
+    font-size: 15px;
+    font-weight: bold;
+    color: #3a6fee;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+  }
+  .subsection-title .num {
+    background: #3a6fee;
+    color: #fff;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    margin-right: 8px;
+    flex-shrink: 0;
+  }
+  h3 {
+    font-size: 15px;
+    font-weight: bold;
+    color: #333;
+    margin: 16px 0 8px;
+  }
+  p { margin-bottom: 10px; color: #444; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 18px;
+    font-size: 14px;
+  }
+  table th {
+    background: #1a1a2e;
+    color: #fff;
+    padding: 9px 12px;
+    text-align: left;
+    font-weight: bold;
+  }
+  table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #e8e8e8;
+    vertical-align: top;
+  }
+  table tr:nth-child(even) td { background: #f9f9f9; }
+  blockquote {
+    background: #f0f4ff;
+    border-left: 4px solid #3a6fee;
+    padding: 12px 16px;
+    margin: 12px 0;
+    border-radius: 0 8px 8px 0;
+    font-size: 14px;
+    color: #555;
+  }
+  .source-list {
+    background: #fafafa;
+    padding: 20px 28px;
+  }
+  .source-list li {
+    font-size: 13px;
+    color: #666;
+    padding: 5px 0;
+    border-bottom: 1px dashed #e0e0e0;
+  }
+  .highlight-box {
+    background: linear-gradient(135deg, #f0f4ff, #e8f0fe);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin: 14px 0;
+  }
+  .highlight-box .label {
+    font-size: 11px;
+    font-weight: bold;
+    color: #3a6fee;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .highlight-box .content {
+    font-size: 15px;
+    color: #222;
+    line-height: 1.7;
+  }
+  .footer {
+    text-align: center;
+    padding: 24px 28px;
+    font-size: 12px;
+    color: #aaa;
+    border-top: 1px solid #eee;
+  }
+  .stars { color: #f5a623; }
+  hr.divider {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 24px 0;
+  }
+  @media screen and (max-width: 480px) {
+    .header h1 { font-size: 22px; }
+    .section { padding: 20px 18px 4px; }
+    table { font-size: 13px; }
+    table th, table td { padding: 7px 9px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- 头部 -->
+<div class="header">
+  <div class="tag">📜 姓氏文化研究</div>
+  <h1>任姓族谱深度研究</h1>
+  <div class="meta">起源 · 族谱 · 字辈 · 迁徙 · 湖北专项分析</div>
+</div>
+
+<!-- 目录 -->
+<div class="toc">
+  <div class="toc-title">目 录</div>
+  <ol>
+    <li><a href="#s1">一、任姓溯源：六种说法与学术判断</a></li>
+    <li><a href="#s2">二、族谱体系</a></li>
+    <li><a href="#s3">三、字辈排行</a></li>
+    <li><a href="#s4">四、迁徙历史</a></li>
+    <li><a href="#s5">五、湖北任姓专项分析</a></li>
+    <li><a href="#s6">六、关键历史人物</a></li>
+    <li><a href="#s7">七、信息来源</a></li>
+  </ol>
+</div>
+
+<!-- 第一章：起源 -->
+<div class="section" id="s1">
+  <div class="section-title">一、任姓溯源：六种说法与学术判断</div>
+
+  <div class="subsection">
+    <div class="subsection-title"><span class="num">1</span>说法一：黄帝少子禺阳封国为氏（主流权威说）</div>
+    <p>黄帝少子（一说黄帝之孙颛顼少子）<strong>禺阳</strong>（亦作禹阳、禺虢）受封于任地（今河北任丘西北，后南移山东济宁），建立任国，其后裔以国名为氏，是为任姓正统源头。</p>
+    <blockquote>
+      <strong>文献依据：</strong>《国语·晋语》"黄帝之子二十五宗，其得姓者十四人，为十二姓……任是也"；《新唐书·宰相世系表》："任姓出自黄帝少子禹阳，受封于任，因以为姓。"
+    </blockquote>
+    <p><strong>人物链：</strong>黄帝 → 禺阳 → 奚仲（夏朝车正，封薛）→ 仲虺（商汤左相）→ …… → 任不齐（孔子七十二贤，春秋楚国人）</p>
+    <p><span class="stars">⭐⭐⭐⭐⭐</span> 最受学术界认可，有多部正史互证，传承链条清晰。</p>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title"><span class="num">2</span>说法二：太昊伏羲氏之后，风姓任国</div>
+    <p>任姓为上古帝王太昊（伏羲氏）后裔所建任国之后，以国为氏。任国在今山东济宁，战国时被齐国吞并。《左传·僖公二十一年》："任、宿、须句、颛臾，风姓也，实司太昊与有济之祀。"</p>
+    <p><span class="stars">⭐⭐⭐⭐</span> 史料确实，目前主流观点认为风姓任国与黄帝系最终合流，当代任姓多为两者融合后裔。</p>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title"><span class="num">3</span>说法三：远古妊姓衍传</div>
+    <p>"人之所以得生，在于母亲妊娠，因生得姓，从母从女，为妊姓，后传为任姓"，是母系氏族社会的遗存。</p>
+    <p><span class="stars">⭐⭐</span> 作为独立起源证据较弱，多数学者认为这是早期姓氏融合的反映。</p>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title"><span class="num">4-6</span>其他：周朝十国分封 / 少数民族改姓 / 其他特殊情况</div>
+    <p>周朝时谢、章、薛、舒、吕、祝、终、泉、毕、过十国均为任姓后裔封国；北魏鲜卑"叱奴氏"、元代蒙古族、清代满族"任佳氏"等在汉化中改姓任。</p>
+    <p><span class="stars">⭐⭐⭐</span>（十国分封）<span class="stars">⭐⭐⭐⭐</span>（少数民族）</p>
+  </div>
+
+  <div class="highlight-box">
+    <div class="label">学术综合判断</div>
+    <div class="content">当代任姓以<strong>黄帝系禺阳后裔为主体</strong>，融合风姓任国、古妊姓及多批次少数民族改姓，形成"多元一体"格局。得姓始祖常尊为<strong>禺阳</strong>与<strong>任不齐</strong>。</div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- 第二章：族谱体系 -->
+<div class="section" id="s2">
+  <div class="section-title">二、族谱体系</div>
+
+  <div class="subsection-title">重要谱籍</div>
+  <table>
+    <tr><th>谱籍</th><th>时代</th><th>收藏地</th></tr>
+    <tr><td>《任氏宗谱》湖北黄冈16卷</td><td>清光绪二十四年</td><td>族谱网</td></tr>
+    <tr><td>《湖北任氏宗谱》20卷首4卷</td><td>清至民国</td><td>族谱网（五知堂）</td></tr>
+    <tr><td>《湖北任氏族谱》谷城3卷</td><td>民国二十一年（1932）</td><td>谷城茨河镇</td></tr>
+    <tr><td>河北卢龙任氏族谱3卷</td><td>清咸丰六年（1856）</td><td>卢龙县地名办</td></tr>
+    <tr><td>江苏江都任氏南渡分支集族谱8卷</td><td>明洪武三十年创修</td><td>江苏</td></tr>
+  </table>
+
+  <div class="subsection-title">三大堂号</div>
+  <p><strong>乐安堂</strong>：任氏最主要堂号，郡望在今山东广饶一带。</p>
+  <p><strong>五知堂</strong>：湖北黄冈等地重要堂号，取"知止、知足、知命、知常、知足"之意，是鄂东任氏核心标识。</p>
+  <p><strong>水薤堂</strong>：典出东汉隐士任棠——任棠拔大薤、端清水示意太守"一清如水、拔除豪强、抚育孤儿"，寓意清廉仁政。</p>
+</div>
+
+<hr class="divider">
+
+<!-- 第三章：字辈排行 -->
+<div class="section" id="s3">
+  <div class="section-title">三、字辈排行</div>
+
+  <div class="subsection-title">湖北任氏字辈</div>
+  <table>
+    <tr><th>地区</th><th>字辈</th></tr>
+    <tr><td><strong>黄冈/新洲</strong>（五知堂）</td><td>光守洪以天希国士之封万世立敬祖本厚忠朝声扬…</td></tr>
+    <tr><td><strong>孝感</strong></td><td>高仕恒元选洪道成大天文光福禄寿禧世代荣昌</td></tr>
+    <tr><td><strong>房县</strong></td><td>成家立国中，传世志光大</td></tr>
+    <tr><td><strong>赤壁</strong></td><td>奇士本毓嘉，嗣传芳贤能立作声名显扬</td></tr>
+    <tr><td><strong>谷城茨河</strong></td><td>……天长永远……</td></tr>
+  </table>
+
+  <div class="subsection-title">黄冈五知堂完整字辈</div>
+  <div class="highlight-box">
+    <div class="label">文鉴公派 2~18世</div>
+    <div class="content">光 → 守 → 洪 → 以 → 天 → 希国（单名辈）→ 士（明）→ 之 → 封万（可）→ 世（开）→ 立（继）→ 敬 → 祖 → 本</div>
+  </div>
+  <div class="highlight-box">
+    <div class="label">合派语 19世起</div>
+    <div class="content">庭选家骥，曰惟贤良<br>辉先裕后，大典遐昌</div>
+  </div>
+  <div class="highlight-box">
+    <div class="label">完整派序</div>
+    <div class="content">敬祖本厚，忠朝声扬<br>学遵洙泗，绩效明良<br>永辉先绪，衍祚隆昌</div>
+  </div>
+
+  <div class="subsection-title">全国对比</div>
+  <table>
+    <tr><th>省份/地区</th><th>字辈举例</th></tr>
+    <tr><td>湖南湘潭</td><td>派演治觉鼎思仁廷任学开体应先恒文章永世卓</td></tr>
+    <tr><td>贵州罗甸</td><td>洪文济莲王光先明景兴啟发正仕有孟中永乐清</td></tr>
+    <tr><td>安徽六安</td><td>思文柔孚予汝庆长传之百世启明印清开承述继宗德绍光永延亦绪</td></tr>
+    <tr><td>河南登封</td><td>文明啟仕，正大永康，卓述昌裕，遵义辉光…（共48字）</td></tr>
+  </table>
+</div>
+
+<hr class="divider">
+
+<!-- 第四章：迁徙历史 -->
+<div class="section" id="s4">
+  <div class="section-title">四、迁徙历史</div>
+
+  <div class="highlight-box">
+    <div class="label">先秦时期</div>
+    <div class="content">任姓起源于山东济宁/河北任丘，早期活动于<strong>山东、河南、湖北</strong>。任不齐为楚国人，战国时任姓已分布于鲁/郑/楚/晋/秦等地。</div>
+  </div>
+
+  <div class="highlight-box">
+    <div class="label">秦汉时期</div>
+    <div class="content">秦始皇南海尉任嚣驻岭南，番禺城（广州）成为任姓入粤的历史证据。汉代任光（云台二十八将之一）、任隗（司徒）等在中原崛起。</div>
+  </div>
+
+  <div class="highlight-box">
+    <div class="label">魏晋南北朝</div>
+    <div class="content">永嘉之乱后中原士族南渡，任姓进入江浙、福建。南朝梁代任昉（"竟陵八友"之一）家族迁居江苏宜兴。</div>
+  </div>
+
+  <div class="highlight-box">
+    <div class="label">元末明初 —— 两股最重要移民潮</div>
+    <div class="content">
+      <strong>① 江西鄱阳瓦屑坝 → 湖北黄冈</strong>（湖北任姓主体）<br>
+      <strong>② 山西洪洞大槐树 → 华北/华中/西北</strong>（全国性扩散）<br><br>
+      洪洞任氏五兄弟洪武二十四年从洪洞迁出：老大任宗大迁泌阳、老二任俩仪迁温县传羌镇、老三任宗三迁温县西虢镇、老四任肇基迁济源留养镇、老五任同仙迁济源薛庄镇。
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- 第五章：湖北任姓专项 -->
+<div class="section" id="s5">
+  <div class="section-title">五、湖北任姓专项分析</div>
+
+  <div class="subsection-title">湖北任姓三大来源</div>
+  <table>
+    <tr><th>来源地</th><th>迁入时代</th><th>主要落点</th><th>代表支系</th></tr>
+    <tr><td>江西鄱阳瓦屑坝</td><td>元末明初</td><td>黄冈、孝感、武汉</td><td>五知堂黄冈任氏</td></tr>
+    <tr><td>山西洪洞大槐树</td><td>明初</td><td>鄂北（襄阳、谷城等）</td><td>谷城任氏等</td></tr>
+    <tr><td>其他零星迁入</td><td>各时期</td><td>全省分散</td><td>各支不一</td></tr>
+  </table>
+
+  <div class="subsection-title">黄冈任氏（湖北任姓第一大脉）</div>
+  <p><strong>始祖：</strong>任文鉴（字朝俸/耀如），明初自江西鄱阳县瓦屑坝迁湖北黄冈。</p>
+  <p><strong>早期世系：</strong>文鉴公 → 光祖 / 光国 / 光宗</p>
+  <p><strong>六世分支：</strong>天秩（光祖裔）/ 天爵（光国裔）/ 天哲、天琳、天祥、天叙（光宗裔）</p>
+  <p><strong>散居地：</strong>任家墩、江夏招贤里、河南畈、吉毛湖南岸、三里桥、四川省等</p>
+
+  <div class="subsection-title">空间分布图</div>
+  <table>
+    <tr><th>区域</th><th>代表地</th><th>堂号/字辈特点</th><th>来源</th></tr>
+    <tr><td>鄂东</td><td>黄冈、新洲、浠水</td><td>五知堂，鄱阳系</td><td>江西鄱阳瓦屑坝</td></tr>
+    <tr><td>鄂中</td><td>孝感、武汉黄陂</td><td>独立字辈系统</td><td>江西鄱阳/洪洞混合</td></tr>
+    <tr><td>鄂北</td><td>襄阳、谷城</td><td>独立字辈，与河南相邻</td><td>洪洞大槐树系统</td></tr>
+  </table>
+</div>
+
+<hr class="divider">
+
+<!-- 第六章：关键历史人物 -->
+<div class="section" id="s6">
+  <div class="section-title">六、关键历史人物</div>
+  <table>
+    <tr><th>时代</th><th>姓名</th><th>主要成就</th></tr>
+    <tr><td>春秋</td><td>任不齐</td><td>孔子七十二贤之一，唐封任城伯，宋加封当阳侯</td></tr>
+    <tr><td>战国</td><td>任鄙</td><td>秦武王时著名勇士，"力则任鄙"</td></tr>
+    <tr><td>秦末</td><td>任嚣</td><td>秦始皇南海尉，岭南统一首任郡尉，"东南一尉"</td></tr>
+    <tr><td>西汉</td><td>任敖</td><td>开国功臣，封刘侯</td></tr>
+    <tr><td>东汉</td><td>任光</td><td>云台二十八将之一</td></tr>
+    <tr><td>东汉</td><td>任棠</td><td>隐士，水薤堂典故</td></tr>
+    <tr><td>南朝梁</td><td>任昉</td><td>文学家，"竟陵八友"之一</td></tr>
+    <tr><td>唐</td><td>任雅相</td><td>名将，征高句丽</td></tr>
+    <tr><td>宋</td><td>任伯雨</td><td>谏官，以刚直闻名</td></tr>
+  </table>
+</div>
+
+<hr class="divider">
+
+<!-- 第七章：信息来源 -->
+<div class="section" id="s7">
+  <div class="section-title">七、信息来源（共16条）</div>
+  <ol style="padding-left: 20px;">
+    <li>《国语·晋语》（先秦）— 黄帝赐姓十二姓</li>
+    <li>《新唐书·宰相世系表》（宋代）— 任姓起源黄帝少子禹阳</li>
+    <li>《左传·僖公二十一年》（先秦）— 任姓风姓说</li>
+    <li>《通志·氏族略》（宋代，郑樵）— 太昊后任姓之国</li>
+    <li>《姓纂》（唐代，林宝）— 黄帝二十五子得姓记载</li>
+    <li>《史记·南越列传》（西汉，司马迁）— 秦代任姓入粤</li>
+    <li>《洪洞大槐树寻根》（现代，张青）— 洪洞任氏移民史料</li>
+    <li>《左传·隐公十一年疏》— 任姓十国分封说</li>
+    <li>族谱网（zupu.cn）— 湖北黄冈/谷城任氏电子谱牒</li>
+    <li>搜狗百科"任姓"词条</li>
+    <li>百度百科"任姓"词条</li>
+    <li>今日头条"任姓的起源和发展"</li>
+    <li>聊聊历史堂"任姓是如何来的"</li>
+    <li>道客巴巴《全国各省任氏辈分收集》</li>
+    <li>卜易居"任姓家谱81个字辈"</li>
+    <li>知乎问答"河南开封通许任氏族谱？"（河南登封48字完整字辈来源）</li>
+  </ol>
+</div>
+
+<!-- 页脚 -->
+<div class="footer">
+  任姓族谱深度研究 &nbsp;|&nbsp; 研究日期：2026-05-09<br>
+  信息源经多方采集比对 &nbsp;|&nbsp; 学术结论已标注置信度
+</div>
+
+</div>
+</body>
+</html>
