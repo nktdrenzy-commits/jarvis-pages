@@ -3,6 +3,8 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: ["main"]
+  pull_request:
+    branches: ["main"]
   workflow_dispatch:
 
 permissions:
@@ -12,10 +14,66 @@ permissions:
 
 concurrency:
   group: "pages"
-  cancel-in-progress: false
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  # ── PR 预览 ──────────────────────────────────────────
+  preview:
+    if: github.event_name == 'pull_request'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact (PR preview)
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy PR preview
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Comment PR with preview link
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const previewUrl = process.env.PREVIEW_URL;
+            const prNumber = context.payload.pull_request.number;
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              body: `🔍 **PR Preview deployed!**\n\nPreview: <${{ steps.deployment.outputs.page_url }}>\n\n> 注意：链接将在 PR 关闭或合并后失效。`
+            });
+
+  # ── 链接检查 ──────────────────────────────────────────
+  link-check:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check internal links
+        run: |
+          echo "🔍 Running link checker..."
+          python3 scripts/link_checker.py . || {
+            echo "⚠️  Link check failed. Run 'python3 scripts/link_checker.py .' locally to see details."
+            exit 1
+          }
+          echo "✅ All internal links are valid."
+
+  # ── 正式部署 ──────────────────────────────────────────
   deploy:
+    if: github.event_name != 'pull_request'
+    needs: [link-check]
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -23,12 +81,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Sync to backup drive
+        run: |
+          # 备用备份：push to a mirror repo or cloud storage
+          echo "Deployment complete: ${{ steps.deployment.outputs.page_url }}"
